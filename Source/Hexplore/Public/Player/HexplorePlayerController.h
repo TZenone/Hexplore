@@ -8,6 +8,7 @@
 
 class UInputMappingContext;
 class UInputAction;
+class ITargetInterface;
 
 struct FInputActionValue;
 
@@ -21,6 +22,7 @@ class HEXPLORE_API AHexplorePlayerController : public APlayerController
 
 public:
 	AHexplorePlayerController();
+	virtual void PlayerTick(float DeltaTime) override;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -35,4 +37,8 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 
 	void Move(const FInputActionValue& InputActionValue);
+	void CursorTrace();
+
+	TScriptInterface<ITargetInterface> LastActor;
+	TScriptInterface<ITargetInterface> ThisActor;
 };

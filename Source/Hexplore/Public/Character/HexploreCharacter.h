@@ -13,5 +13,8 @@ UCLASS()
 class HEXPLORE_API AHexploreCharacter : public AHexploreCharacterBase
 {
 	GENERATED_BODY()
+
+public:
 	
+	AHexploreCharacter();
 };
