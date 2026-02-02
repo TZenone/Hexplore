@@ -17,4 +17,14 @@ class HEXPLORE_API AHexploreCharacter : public AHexploreCharacterBase
 public:
 	
 	AHexploreCharacter();
+
+	UFUNCTION(BlueprintCallable)
+	void SetCameraMode(bool bAim);
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category="Rotation")
+	float MoveRotationRateYaw = 720.f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Rotation")
+	float AimRotationRateYaw = 1080.f;
 };

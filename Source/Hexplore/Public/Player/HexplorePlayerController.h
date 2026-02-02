@@ -36,9 +36,25 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> RotateCameraAction;
+
 	void Move(const FInputActionValue& InputActionValue);
+
+	void RMBPressed(const FInputActionValue& Value);
+	void RMBReleased(const FInputActionValue& Value);
+	void UpdateControlRotationToCursor(float DeltaTime);
+	
 	void CursorTrace();
 
 	TScriptInterface<ITargetInterface> LastActor;
 	TScriptInterface<ITargetInterface> ThisActor;
+
+	bool bRotateCameraHeld = false;
+
+	UPROPERTY(EditDefaultsOnly, Category="Camera|Aim")
+	float AimYawDegreesPerSecond = 90.f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Camera|Aim")
+	float CenterDeadZoneRadiusPx = 90.f; 
 };
