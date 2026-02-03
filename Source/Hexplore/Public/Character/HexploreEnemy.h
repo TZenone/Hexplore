@@ -16,6 +16,8 @@ class HEXPLORE_API AHexploreEnemy : public AHexploreCharacterBase, public ITarge
 	GENERATED_BODY()
 
 public:
+	AHexploreEnemy();
+	
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 

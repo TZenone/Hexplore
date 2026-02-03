@@ -12,6 +12,11 @@ AHexploreCharacterBase::AHexploreCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+UAbilitySystemComponent* AHexploreCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 void AHexploreCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
