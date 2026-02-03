@@ -17,4 +17,10 @@ class HEXPLORE_API AHexploreCharacter : public AHexploreCharacterBase
 public:
 	
 	AHexploreCharacter();
+
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+private:
+	void InitAbilityActorInfo();
 };

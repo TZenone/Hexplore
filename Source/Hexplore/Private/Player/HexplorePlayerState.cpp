@@ -10,6 +10,7 @@ AHexplorePlayerState::AHexplorePlayerState()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UHexploreAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UHexploreAttributeSet>("AttributeSet");
 	SetNetUpdateFrequency(100.f);
