@@ -40,7 +40,8 @@ private:
 	TObjectPtr<UInputAction> SprintAction;
 
 	void Move(const FInputActionValue& InputActionValue);
-	void Sprint(const FInputActionValue& InputActionValue);
+	void SprintStart(const FInputActionValue& InputActionValue);
+	void SprintEnd(const FInputActionValue& InputActionValue);
 	
 	void CursorTrace();
 

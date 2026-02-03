@@ -47,7 +47,8 @@ void AHexplorePlayerController::SetupInputComponent()
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Move);
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Sprint);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHexplorePlayerController::SprintStart);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::SprintEnd);
 
 	// RMB hold (Camera), leaving that on the side for now
 	// EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Started, this, &AHexplorePlayerController::RMBPressed);
@@ -70,13 +71,23 @@ void AHexplorePlayerController::Move(const FInputActionValue& InputActionValue)
 	}
 }
 
-void AHexplorePlayerController::Sprint(const FInputActionValue& InputActionValue)
+void AHexplorePlayerController::SprintStart(const FInputActionValue& InputActionValue)
 {
 	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
 		AHexploreCharacter* HexploreCharacter = Cast<AHexploreCharacter>(ControlledPawn);
 		UCharacterMovementComponent* Movement = HexploreCharacter->GetCharacterMovement();
 		Movement->MaxWalkSpeed = 600.f;
+	}
+}
+
+void AHexplorePlayerController::SprintEnd(const FInputActionValue& InputActionValue)
+{
+	if (APawn* ControlledPawn = GetPawn<APawn>())
+	{
+		AHexploreCharacter* HexploreCharacter = Cast<AHexploreCharacter>(ControlledPawn);
+		UCharacterMovementComponent* Movement = HexploreCharacter->GetCharacterMovement();
+		Movement->MaxWalkSpeed = 300.f;
 	}
 }
 
