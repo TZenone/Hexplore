@@ -5,6 +5,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Character/HexploreCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Interaction/TargetInterface.h"
 
 AHexplorePlayerController::AHexplorePlayerController()
@@ -17,11 +19,6 @@ void AHexplorePlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
-
-	if (bRotateCameraHeld)
-	{
-		UpdateControlRotationToCursor(DeltaTime);
-	}
 }
 
 void AHexplorePlayerController::BeginPlay()
@@ -50,10 +47,11 @@ void AHexplorePlayerController::SetupInputComponent()
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Move);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Sprint);
 
-	// RMB hold (Camera)
-	EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Started, this, &AHexplorePlayerController::RMBPressed);
-	EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::RMBReleased);
+	// RMB hold (Camera), leaving that on the side for now
+	// EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Started, this, &AHexplorePlayerController::RMBPressed);
+	// EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::RMBReleased);
 }
 
 void AHexplorePlayerController::Move(const FInputActionValue& InputActionValue)
@@ -63,8 +61,8 @@ void AHexplorePlayerController::Move(const FInputActionValue& InputActionValue)
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 	
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(Rotation).GetUnitAxis(EAxis::Y);
-
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	
 	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
@@ -72,68 +70,14 @@ void AHexplorePlayerController::Move(const FInputActionValue& InputActionValue)
 	}
 }
 
-void AHexplorePlayerController::RMBPressed(const FInputActionValue& Value)
+void AHexplorePlayerController::Sprint(const FInputActionValue& InputActionValue)
 {
-	bRotateCameraHeld = true;
-
-	if (AHexploreCharacter* Char = Cast<AHexploreCharacter>(GetPawn()))
+	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
-		Char->SetCameraMode(true);
+		AHexploreCharacter* HexploreCharacter = Cast<AHexploreCharacter>(ControlledPawn);
+		UCharacterMovementComponent* Movement = HexploreCharacter->GetCharacterMovement();
+		Movement->MaxWalkSpeed = 600.f;
 	}
-}
-
-void AHexplorePlayerController::RMBReleased(const FInputActionValue& Value)
-{
-	bRotateCameraHeld = false;
-
-	if (AHexploreCharacter* Char = Cast<AHexploreCharacter>(GetPawn()))
-	{
-		Char->SetCameraMode(false);
-	}
-}
-
-void AHexplorePlayerController::UpdateControlRotationToCursor(float DeltaTime)
-{
-	APawn* P = GetPawn();
-	if (!P) return;
-	
-	int32 SizeX = 0, SizeY = 0;
-	GetViewportSize(SizeX, SizeY);
-	const FVector2D ViewCenter(SizeX * 0.5f, SizeY * 0.5f);
-
-	float MouseX = 0.f, MouseY = 0.f;
-	if (!GetMousePosition(MouseX, MouseY)) return;
-
-	const FVector2D MousePos(MouseX, MouseY);
-	if (FVector2D::Distance(MousePos, ViewCenter) <= CenterDeadZoneRadiusPx)
-	{
-		// Inside dead zone: keep current yaw (no micro-jitter)
-		return;
-	}
-
-	// --- CURSOR HIT ---
-	FHitResult CursorHit;
-	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
-	if (!CursorHit.bBlockingHit) return;
-
-	const FVector PawnLocation = P->GetActorLocation();
-	const FVector Target = CursorHit.ImpactPoint;
-
-	const float DesiredYaw = (Target - PawnLocation).Rotation().Yaw;
-	const float CurrentYaw = GetControlRotation().Yaw;
-
-	const float Dist = FVector2D::Distance(MousePos, ViewCenter);
-	const float EffectiveDist = FMath::Max(0.f, Dist - CenterDeadZoneRadiusPx);
-	
-	const float MaxDist = 0.5f * FMath::Min(SizeX, SizeY);
-	const float Alpha = FMath::Clamp(EffectiveDist / MaxDist, 0.f, 1.f);
-	
-	const float TurnSpeed = FMath::Lerp(0.f, AimYawDegreesPerSecond, Alpha);
-	const float NewYaw = FMath::FixedTurn(CurrentYaw, DesiredYaw, TurnSpeed * DeltaTime);
-
-	FRotator NewRot = GetControlRotation();
-	NewRot.Yaw = NewYaw;
-	SetControlRotation(NewRot);
 }
 
 void AHexplorePlayerController::CursorTrace()

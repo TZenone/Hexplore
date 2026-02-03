@@ -15,21 +15,4 @@ AHexploreCharacter::AHexploreCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
-	UCharacterMovementComponent* MoveComp = GetCharacterMovement();
-	MoveComp->bOrientRotationToMovement = false;
-}
-
-void AHexploreCharacter::SetCameraMode(bool bAim)
-{
-	// Aim: face controller/cursor
-	bUseControllerRotationYaw = bAim;
-
-	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
-	{
-		// Move: face movement direction
-		MoveComp->bOrientRotationToMovement = !bAim;
-
-		MoveComp->RotationRate = FRotator(0.f, bAim ? AimRotationRateYaw : MoveRotationRateYaw, 0.f);
-	}
 }
