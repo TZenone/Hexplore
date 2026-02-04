@@ -5,7 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/HexplorePlayerController.h"
 #include "Player/HexplorePlayerState.h"
+#include "UI/HUD/HexploreHUD.h"
 
 AHexploreCharacter::AHexploreCharacter()
 {
@@ -43,4 +45,13 @@ void AHexploreCharacter::InitAbilityActorInfo()
 	
 	AbilitySystemComponent = PS->GetAbilitySystemComponent();
 	AttributeSet = PS->GetAttributeSet();
+
+	if (AHexplorePlayerController* PC = Cast<AHexplorePlayerController>(GetController()))
+	{
+		if (AHexploreHUD* HUD = Cast<AHexploreHUD>(PC->GetHUD()))
+		{
+			HUD->InitOverlay(PC, PS, AbilitySystemComponent, AttributeSet);
+		}
+	}
+	
 }

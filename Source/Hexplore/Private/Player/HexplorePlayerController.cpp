@@ -27,9 +27,10 @@ void AHexplorePlayerController::BeginPlay()
 	check(HexploreContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-
-	Subsystem->AddMappingContext(HexploreContext, 0);
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(HexploreContext, 0);
+	}
 
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
