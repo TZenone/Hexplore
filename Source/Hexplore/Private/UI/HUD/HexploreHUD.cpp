@@ -13,6 +13,7 @@ UOverlayWidgetController* AHexploreHUD::GetOverlayWidgetController(const FWidget
 	{
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+		OverlayWidgetController->BindCallbacksToDependencies();
 		
 		return OverlayWidgetController;
 	}

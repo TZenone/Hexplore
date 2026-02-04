@@ -15,3 +15,8 @@ void UHexploreWidgetController::BroadcastInitialValues()
 {
 	
 }
+
+void UHexploreWidgetController::BindCallbacksToDependencies()
+{
+	
+}
