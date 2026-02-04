@@ -28,7 +28,7 @@ void AHexploreEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGame
 	FGameplayEffectContextHandle EffectContext = TargetASC->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 	
-	FGameplayEffectSpecHandle EffectSpec = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContext);
+	const FGameplayEffectSpecHandle EffectSpec = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContext);
 	
 	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpec.Data.Get());
 }
