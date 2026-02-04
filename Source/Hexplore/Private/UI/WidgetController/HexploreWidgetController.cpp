@@ -10,3 +10,8 @@ void UHexploreWidgetController::SetWidgetControllerParams(const FWidgetControlle
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+
+void UHexploreWidgetController::BroadcastInitialValues()
+{
+	
+}
