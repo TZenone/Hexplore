@@ -26,19 +26,19 @@ void UHexploreAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
 }
 
-/*void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
 	if (Attribute == GetHealthAttribute())
 	{
-		NewValue = FMath::Clamp(GetHealth(), 0.f, GetMaxHealth());
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	}
 	if (Attribute == GetStaminaAttribute())
 	{
-		NewValue = FMath::Clamp(GetStamina(), 0.f, GetMaxStamina());
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxStamina());
 	}
-}*/
+}
 
 void UHexploreAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
 {
@@ -72,13 +72,13 @@ void UHexploreAttributeSet::SetEffectProperties(const FGameplayEffectModCallback
 	}
 }
 
-/*void UHexploreAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UHexploreAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
-}*/
+}
 
 void UHexploreAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
