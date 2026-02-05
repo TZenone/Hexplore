@@ -19,8 +19,10 @@ class HEXPLORE_API UHexploreAbilitySystemComponent : public UAbilitySystemCompon
 public:
 	void AbilityActorInfoSet();
 
-	FEffectAssetTags EffectAssetTags;
+	FEffectAssetTags EffectAssetTagsAdded;
+	FEffectAssetTags EffectAssetTagsRemoved;
 protected:
 
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
+	void EffectRemoved(const FActiveGameplayEffect& RemovedEffect);
 };

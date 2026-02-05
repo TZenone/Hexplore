@@ -6,6 +6,7 @@
 void UHexploreAbilitySystemComponent::AbilityActorInfoSet()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UHexploreAbilitySystemComponent::EffectApplied);
+	OnAnyGameplayEffectRemovedDelegate().AddUObject(this, &UHexploreAbilitySystemComponent::EffectRemoved);
 }
 
 void UHexploreAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
@@ -14,11 +15,19 @@ void UHexploreAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* Abi
 	FGameplayTagContainer TagContainer;
 	EffectSpec.GetAllAssetTags(TagContainer);
 
-	EffectAssetTags.Broadcast(TagContainer);
+	EffectAssetTagsAdded.Broadcast(TagContainer);
 
 	for (const FGameplayTag& Tag : TagContainer)
 	{
 		// TODO: Broadcast the tag to the Widget Controller
 		
 	}
+}
+
+void UHexploreAbilitySystemComponent::EffectRemoved(const FActiveGameplayEffect& RemovedEffect)
+{
+	FGameplayTagContainer TagContainer;
+	RemovedEffect.Spec.GetAllAssetTags(TagContainer);
+
+	EffectAssetTagsRemoved.Broadcast(TagContainer);
 }
