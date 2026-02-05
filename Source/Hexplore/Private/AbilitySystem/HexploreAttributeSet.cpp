@@ -78,6 +78,16 @@ void UHexploreAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCa
 
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+
+	if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
+	}
 }
 
 void UHexploreAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
