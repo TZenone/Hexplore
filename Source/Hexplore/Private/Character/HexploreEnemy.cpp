@@ -20,7 +20,15 @@ AHexploreEnemy::AHexploreEnemy()
 void AHexploreEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitAbilityActorInfo();
+}
+
+void AHexploreEnemy::InitAbilityActorInfo()
+{
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UHexploreAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	
 }
 
 void AHexploreEnemy::HighlightActor()

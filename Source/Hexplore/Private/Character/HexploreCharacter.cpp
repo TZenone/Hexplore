@@ -4,6 +4,7 @@
 #include "Character/HexploreCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/HexplorePlayerController.h"
 #include "Player/HexplorePlayerState.h"
@@ -42,6 +43,7 @@ void AHexploreCharacter::InitAbilityActorInfo()
 	AHexplorePlayerState* PS =  GetPlayerState<AHexplorePlayerState>();
 	check(PS);
 	PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
+	Cast<UHexploreAbilitySystemComponent>(PS->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	
 	AbilitySystemComponent = PS->GetAbilitySystemComponent();
 	AttributeSet = PS->GetAttributeSet();

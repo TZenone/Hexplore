@@ -23,3 +23,8 @@ void AHexploreCharacterBase::BeginPlay()
 	
 }
 
+void AHexploreCharacterBase::InitAbilityActorInfo()
+{
+	
+}
+
