@@ -3,15 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/WidgetController/HexploreWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
+class UHexploreUserWidget;
 struct FOnAttributeChangeData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStaminaChangedSignature, float, NewStamina);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxStaminaChangedSignature, float, NewMaxStamina);
+
+USTRUCT(BlueprintType)
+struct FUIWidgetRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FGameplayTag MessageTag = FGameplayTag();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FText Message = FText();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<UHexploreUserWidget> MessageWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UTexture2D* Image = nullptr;
+};
+
 
 /**
  * 
@@ -38,6 +59,9 @@ public:
 	FOnMaxStaminaChangedSignature OnMaxStaminaChanged;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UDataTable> MessageWidgetDataTable;
+	
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
 	void StaminaChanged(const FOnAttributeChangeData& Data) const;

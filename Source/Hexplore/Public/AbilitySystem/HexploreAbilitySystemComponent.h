@@ -6,6 +6,8 @@
 #include "AbilitySystemComponent.h"
 #include "HexploreAbilitySystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer&);
+
 /**
  * 
  */
@@ -17,6 +19,7 @@ class HEXPLORE_API UHexploreAbilitySystemComponent : public UAbilitySystemCompon
 public:
 	void AbilityActorInfoSet();
 
+	FEffectAssetTags EffectAssetTags;
 protected:
 
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
