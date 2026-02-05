@@ -26,7 +26,7 @@ void UHexploreAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
 }
 
-void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+/*void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
@@ -38,16 +38,16 @@ void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribu
 	{
 		NewValue = FMath::Clamp(GetStamina(), 0.f, GetMaxStamina());
 	}
-}
+}*/
 
 void UHexploreAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
 {
 	Props.EffectContextHandle = Data.EffectSpec.GetContext();
 	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 
-	if (IsValid(Props.SourceASC) && Props.SourceASC->GetAvatarActor())
+	if (IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
 	{
-		Props.SourceAvatarActor = Props.SourceASC->GetAvatarActor();
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get();
 		Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get();
 
 		if (Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
@@ -63,22 +63,22 @@ void UHexploreAttributeSet::SetEffectProperties(const FGameplayEffectModCallback
 		}
 	}
 
-	if (Data.Target.AbilityActorInfo.IsValid() && IsValid(Data.Target.GetAvatarActor()))
+	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
-		Props.TargetAvatarActor = Data.Target.GetAvatarActor();
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
 		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
 	}
 }
 
-void UHexploreAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+/*void UHexploreAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
-}
+}*/
 
 void UHexploreAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
