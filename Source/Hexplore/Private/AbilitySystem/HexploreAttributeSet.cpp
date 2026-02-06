@@ -24,6 +24,10 @@ void UHexploreAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Endurance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 }
 
 void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -108,4 +112,19 @@ void UHexploreAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldStami
 void UHexploreAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, MaxStamina, OldMaxStamina);
+}
+
+void UHexploreAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, Strength, OldStrength);
+}
+
+void UHexploreAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, Vigor, OldVigor);
+}
+
+void UHexploreAttributeSet::OnRep_Endurance(const FGameplayAttributeData& OldEndurance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, Endurance, OldEndurance);
 }

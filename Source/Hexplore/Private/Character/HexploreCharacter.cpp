@@ -55,5 +55,6 @@ void AHexploreCharacter::InitAbilityActorInfo()
 			HUD->InitOverlay(PC, PS, AbilitySystemComponent, AttributeSet);
 		}
 	}
-	
+
+	InitializePrimaryAttributes();
 }

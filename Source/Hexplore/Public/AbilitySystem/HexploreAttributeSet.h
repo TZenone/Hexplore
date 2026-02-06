@@ -21,7 +21,7 @@ struct FEffectProperties
 	FEffectProperties(){}
 
 	FGameplayEffectContextHandle EffectContextHandle;
-
+	
 	UPROPERTY()
 	UAbilitySystemComponent* SourceASC = nullptr;
 
@@ -62,7 +62,11 @@ public:
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
-
+	
+	/*
+	 *  Vital Attributes
+	 */
+	
 	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Health);
@@ -78,7 +82,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_MaxStamina, Category = "Vital Attributes")
 	FGameplayAttributeData MaxStamina;
 	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, MaxStamina);
-	
+
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 
@@ -90,6 +94,31 @@ public:
 
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const;
+
+	/*
+	 *  Primary Attributes
+	 */
+	
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Strength, Category = "Primary Attributes")
+	FGameplayAttributeData Strength;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Strength);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Vigor, Category = "Primary Attributes")
+	FGameplayAttributeData Vigor;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Vigor);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Endurance, Category = "Primary Attributes")
+	FGameplayAttributeData Endurance;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Endurance);
+
+	UFUNCTION()
+	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
+	
+	UFUNCTION()
+	void OnRep_Vigor(const FGameplayAttributeData& OldVigor) const;
+
+	UFUNCTION()
+	void OnRep_Endurance(const FGameplayAttributeData& OldEndurance) const;
 
 private:
 
