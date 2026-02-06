@@ -20,15 +20,30 @@ void UHexploreAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	// Vital Attributes
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
 
+	// Primary Attributes
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Dexterity, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Endurance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
+
+	// Secondary Attributes
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, ArmorPen, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, Block, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, CritChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, CritMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, StaminaRegen, COND_None, REPNOTIFY_Always);
+	
 }
 
 void UHexploreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -133,4 +148,39 @@ void UHexploreAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) 
 void UHexploreAttributeSet::OnRep_Endurance(const FGameplayAttributeData& OldEndurance) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, Endurance, OldEndurance);
+}
+
+void UHexploreAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, Armor, OldArmor);
+}
+
+void UHexploreAttributeSet::OnRep_ArmorPen(const FGameplayAttributeData& OldArmorPen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, ArmorPen, OldArmorPen);
+}
+
+void UHexploreAttributeSet::OnRep_Block(const FGameplayAttributeData& OldBlock) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, Block, OldBlock);
+}
+
+void UHexploreAttributeSet::OnRep_CritChance(const FGameplayAttributeData& OldCritChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, CritChance, OldCritChance);
+}
+
+void UHexploreAttributeSet::OnRep_CritMultiplier(const FGameplayAttributeData& OldCritMultiplier) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, CritMultiplier, OldCritMultiplier);
+}
+
+void UHexploreAttributeSet::OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, HealthRegen, OldHealthRegen);
+}
+
+void UHexploreAttributeSet::OnRep_StaminaRegen(const FGameplayAttributeData& OldStaminaRegen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, StaminaRegen, OldStaminaRegen);
 }

@@ -119,13 +119,67 @@ public:
 	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
 	
 	UFUNCTION()
+	void OnRep_Dexterity(const FGameplayAttributeData& OldDexterity) const;
+	
+	UFUNCTION()
 	void OnRep_Vigor(const FGameplayAttributeData& OldVigor) const;
 
 	UFUNCTION()
 	void OnRep_Endurance(const FGameplayAttributeData& OldEndurance) const;
 
+	/*
+	 *  Secondary Attributes
+	 */
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Armor, Category = "Secondary Attributes")
+	FGameplayAttributeData Armor;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Armor);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_ArmorPen, Category = "Secondary Attributes")
+	FGameplayAttributeData ArmorPen;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, ArmorPen);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Block, Category = "Secondary Attributes")
+	FGameplayAttributeData Block;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Block);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_CritChance, Category = "Secondary Attributes")
+	FGameplayAttributeData CritChance;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, CritChance);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_CritMultiplier, Category = "Secondary Attributes")
+	FGameplayAttributeData CritMultiplier;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, CritMultiplier);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_HealthRegen, Category = "Secondary Attributes")
+	FGameplayAttributeData HealthRegen;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, HealthRegen);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_StaminaRegen, Category = "Secondary Attributes")
+	FGameplayAttributeData StaminaRegen;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, StaminaRegen);
+	
 	UFUNCTION()
-	void OnRep_Dexterity(const FGameplayAttributeData& OldDexterity) const;
+	void OnRep_Armor(const FGameplayAttributeData& OldArmor) const;
+
+	UFUNCTION()
+	void OnRep_ArmorPen(const FGameplayAttributeData& OldArmorPen) const;
+
+	UFUNCTION()
+	void OnRep_Block(const FGameplayAttributeData& OldBlock) const;
+
+	UFUNCTION()
+	void OnRep_CritChance(const FGameplayAttributeData& OldCritChance) const;
+
+	UFUNCTION()
+	void OnRep_CritMultiplier(const FGameplayAttributeData& OldCritMultiplier) const;
+
+	UFUNCTION()
+	void OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const;
+
+	UFUNCTION()
+	void OnRep_StaminaRegen(const FGameplayAttributeData& OldStaminaRegen) const;
+	
 
 private:
 
