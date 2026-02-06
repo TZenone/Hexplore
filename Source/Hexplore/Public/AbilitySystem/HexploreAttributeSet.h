@@ -103,6 +103,10 @@ public:
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Strength);
 
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Dexterity, Category = "Primary Attributes")
+	FGameplayAttributeData Dexterity;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Dexterity);
+
 	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_Vigor, Category = "Primary Attributes")
 	FGameplayAttributeData Vigor;
 	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, Vigor);
@@ -119,6 +123,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_Endurance(const FGameplayAttributeData& OldEndurance) const;
+
+	UFUNCTION()
+	void OnRep_Dexterity(const FGameplayAttributeData& OldDexterity) const;
 
 private:
 
