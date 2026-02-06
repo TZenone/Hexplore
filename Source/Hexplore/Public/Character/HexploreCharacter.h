@@ -15,8 +15,10 @@ class HEXPLORE_API AHexploreCharacter : public AHexploreCharacterBase
 	GENERATED_BODY()
 
 public:
-	
 	AHexploreCharacter();
+
+	/* Combat Interface */
+	/* End Combat Interface */
 
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;

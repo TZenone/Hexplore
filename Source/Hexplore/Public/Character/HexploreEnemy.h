@@ -17,9 +17,14 @@ class HEXPLORE_API AHexploreEnemy : public AHexploreCharacterBase, public ITarge
 
 public:
 	AHexploreEnemy();
-	
+
+	/* Enemy Interface */
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	/* End Enemy Interface */
+	
+	/* Combat Interface */
+	/* End Combat Interface */
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bHighlighted = false;
