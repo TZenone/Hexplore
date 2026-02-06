@@ -10,9 +10,7 @@
 
 UHexploreAttributeSet::UHexploreAttributeSet()
 {
-	InitMaxHealth(100.f);
 	InitHealth(50.f);
-	InitMaxStamina(100.f);
 	InitStamina(50.f);
 }
 
