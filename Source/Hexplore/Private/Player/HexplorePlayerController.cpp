@@ -6,7 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "Character/HexploreCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Input/HexploreInputComponent.h"
 #include "Interaction/TargetInterface.h"
 
 AHexplorePlayerController::AHexplorePlayerController()
@@ -45,15 +45,17 @@ void AHexplorePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+	UHexploreInputComponent* HexploreInputComponent = CastChecked<UHexploreInputComponent>(InputComponent);
 
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Move);
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHexplorePlayerController::SprintStart);
-	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::SprintEnd);
+	HexploreInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Move);
+	HexploreInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHexplorePlayerController::SprintStart);
+	HexploreInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::SprintEnd);
+
+	HexploreInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagReleased);
 
 	// RMB hold (Camera), leaving that on the side for now
-	// EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Started, this, &AHexplorePlayerController::RMBPressed);
-	// EnhancedInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::RMBReleased);
+	// HexploreInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Started, this, &AHexplorePlayerController::RMBPressed);
+	// HexploreInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::RMBReleased);
 }
 
 void AHexplorePlayerController::Move(const FInputActionValue& InputActionValue)
@@ -131,4 +133,19 @@ void AHexplorePlayerController::CursorTrace()
 			}
 		}
 	}
+}
+
+void AHexplorePlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	
+}
+
+void AHexplorePlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	
+}
+
+void AHexplorePlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	
 }

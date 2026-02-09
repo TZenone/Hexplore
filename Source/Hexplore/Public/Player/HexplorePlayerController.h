@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "HexplorePlayerController.generated.h"
 
+struct FGameplayTag;
+class UHexploreInputConfig;
 class UInputMappingContext;
 class UInputAction;
 class ITargetInterface;
@@ -47,4 +49,11 @@ private:
 
 	TScriptInterface<ITargetInterface> LastActor;
 	TScriptInterface<ITargetInterface> ThisActor;
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UHexploreInputConfig> InputConfig;
 };
