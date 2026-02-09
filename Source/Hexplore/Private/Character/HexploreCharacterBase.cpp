@@ -31,6 +31,11 @@ void AHexploreCharacterBase::InitAbilityActorInfo()
 	
 }
 
+FVector AHexploreCharacterBase::GetBuffSocketLocation()
+{
+	return GetMesh()->GetSocketLocation(BuffSocketName);
+}
+
 void AHexploreCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
 {
 	check(IsValid(GetAbilitySystemComponent()));

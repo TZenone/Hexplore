@@ -20,5 +20,5 @@ class HEXPLORE_API ICombatInterface
 	GENERATED_BODY()
 
 public:
-	
+	virtual FVector GetBuffSocketLocation();
 };
