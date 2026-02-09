@@ -36,6 +36,23 @@ public:
 	FGameplayTag Attributes_Secondary_StaminaRegen;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxStamina;
+
+	// Input
+	FGameplayTag Input_LMB;
+	FGameplayTag Input_RMB;
+	FGameplayTag Input_1;
+	FGameplayTag Input_2;
+	FGameplayTag Input_3;
+	FGameplayTag Input_4;
+	FGameplayTag Input_5;
+	FGameplayTag Input_E;
+	FGameplayTag Input_Q;
+	FGameplayTag Input_R;
+	FGameplayTag Input_T;
+	FGameplayTag Input_F;
+	FGameplayTag Input_G;
+	FGameplayTag Input_C;
+	FGameplayTag Input_V;
 	
 protected:
 

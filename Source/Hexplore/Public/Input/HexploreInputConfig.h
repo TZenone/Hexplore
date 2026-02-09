@@ -1,0 +1,38 @@
+// Copyright Tristan ZENONE.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "Engine/DataAsset.h"
+#include "HexploreInputConfig.generated.h"
+
+class UInputAction;
+
+USTRUCT(BlueprintType)
+struct FHexploreInputAction
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	const UInputAction* InputAction = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag InputTag = FGameplayTag();
+};
+
+/**
+ * 
+ */
+UCLASS()
+class HEXPLORE_API UHexploreInputConfig : public UDataAsset
+{
+	GENERATED_BODY()
+
+public:
+
+	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = false) const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<FHexploreInputAction> AbilityInputActions;
+};

@@ -63,5 +63,66 @@ void FHexploreGameplayTags::InitializeNativeGameplayTags()
 		FName("Attributes.Secondary.MaxStamina"),
 		FString("Maximum stamina.")
 		);
-	
+
+	// Input Tags
+	GameplayTags.Input_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.LMB"),
+		FString("Input Tag for left mouse button.")
+		);
+	GameplayTags.Input_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.RMB"),
+		FString("Input Tag for right mouse button.")
+		);
+	GameplayTags.Input_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.1"),
+		FString("Input Tag for 1 Key.")
+		);
+	GameplayTags.Input_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.2"),
+		FString("Input Tag for 2 Key.")
+		);
+	GameplayTags.Input_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.3"),
+		FString("Input Tag for 3 Key.")
+		);
+	GameplayTags.Input_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.4"),
+		FString("Input Tag for 4 Key.")
+		);
+	GameplayTags.Input_5 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.5"),
+		FString("Input Tag for 5 Key.")
+		);
+	GameplayTags.Input_E = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.E"),
+		FString("Input Tag for E Key.")
+		);
+	GameplayTags.Input_Q = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.Q"),
+		FString("Input Tag for Q Key.")
+		);
+	GameplayTags.Input_R = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.R"),
+		FString("Input Tag for R Key.")
+		);
+	GameplayTags.Input_T = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.T"),
+		FString("Input Tag for T Key.")
+		);
+	GameplayTags.Input_F = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.F"),
+		FString("Input Tag for F Key.")
+		);
+	GameplayTags.Input_G = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.G"),
+		FString("Input Tag for G Key.")
+		);
+	GameplayTags.Input_C = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.C"),
+		FString("Input Tag for C Key.")
+		);
+	GameplayTags.Input_V = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Input.V"),
+		FString("Input Tag for V Key.")
+		);
 }
