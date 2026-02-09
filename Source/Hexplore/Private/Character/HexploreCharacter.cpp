@@ -28,6 +28,7 @@ void AHexploreCharacter::PossessedBy(AController* NewController)
 
 	// Init Ability actor info for the server
 	InitAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
 void AHexploreCharacter::OnRep_PlayerState()

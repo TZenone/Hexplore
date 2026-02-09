@@ -4,6 +4,7 @@
 #include "Character/HexploreCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/HexploreAbilitySystemComponent.h"
 
 AHexploreCharacterBase::AHexploreCharacterBase()
 {
@@ -44,5 +45,13 @@ void AHexploreCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void AHexploreCharacterBase::AddCharacterAbilities()
+{
+	UHexploreAbilitySystemComponent* HexploreASC = CastChecked<UHexploreAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	HexploreASC->AddCharacterAbilities(StartupAbilities);
 }
 
