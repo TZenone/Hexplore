@@ -2,8 +2,11 @@
 
 
 #include "Player/HexplorePlayerController.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "Character/HexploreCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Input/HexploreInputComponent.h"
@@ -51,7 +54,7 @@ void AHexplorePlayerController::SetupInputComponent()
 	HexploreInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHexplorePlayerController::SprintStart);
 	HexploreInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::SprintEnd);
 
-	HexploreInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagReleased);
+	HexploreInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 
 	// RMB hold (Camera), leaving that on the side for now
 	// HexploreInputComponent->BindAction(RotateCameraAction, ETriggerEvent::Started, this, &AHexplorePlayerController::RMBPressed);
@@ -137,15 +140,26 @@ void AHexplorePlayerController::CursorTrace()
 
 void AHexplorePlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	
+	if (GetASC() == nullptr) return;
 }
 
 void AHexplorePlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	
+	if (GetASC() == nullptr) return;
+	GetASC()->AbilityInputTagReleased(InputTag);
 }
 
 void AHexplorePlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	
+	if (GetASC() == nullptr) return;
+	GetASC()->AbilityInputTagHeld(InputTag);
+}
+
+UHexploreAbilitySystemComponent* AHexplorePlayerController::GetASC()
+{
+	if (HexploreAbilitySystemComponent == nullptr)
+	{
+		HexploreAbilitySystemComponent = Cast<UHexploreAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return HexploreAbilitySystemComponent;
 }

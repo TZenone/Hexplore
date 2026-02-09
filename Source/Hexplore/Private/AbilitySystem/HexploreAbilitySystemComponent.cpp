@@ -3,20 +3,56 @@
 
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 
+#include "AbilitySystem/Abilities/HexploreGameplayAbility.h"
+
 void UHexploreAbilitySystemComponent::AbilityActorInfoSet()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UHexploreAbilitySystemComponent::EffectApplied);
 	OnAnyGameplayEffectRemovedDelegate().AddUObject(this, &UHexploreAbilitySystemComponent::EffectRemoved);
 }
 
-void UHexploreAbilitySystemComponent::AddCharacterAbilities(
-	const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
+void UHexploreAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
 {
-	for (TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		// GiveAbility(AbilitySpec);
-		GiveAbilityAndActivateOnce(AbilitySpec);
+		
+		if (const UHexploreGameplayAbility* HexploreAbility = Cast<UHexploreGameplayAbility>(AbilitySpec.Ability))
+		{
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(HexploreAbility->StartupInputTag);
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UHexploreAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (Spec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		{
+			AbilitySpecInputPressed(Spec);
+			
+			if (!Spec.IsActive())
+			{
+				TryActivateAbility(Spec.Handle);
+			}
+		}
+	}
+}
+
+void UHexploreAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (Spec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
+		{
+			AbilitySpecInputReleased(Spec);
+		}
 	}
 }
 

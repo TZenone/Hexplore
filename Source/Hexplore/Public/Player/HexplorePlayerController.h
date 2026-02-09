@@ -6,12 +6,13 @@
 #include "GameFramework/PlayerController.h"
 #include "HexplorePlayerController.generated.h"
 
-struct FGameplayTag;
 class UHexploreInputConfig;
 class UInputMappingContext;
 class UInputAction;
 class ITargetInterface;
+class UHexploreAbilitySystemComponent;
 
+struct FGameplayTag;
 struct FInputActionValue;
 
 /**
@@ -56,4 +57,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<UHexploreInputConfig> InputConfig;
+
+	UPROPERTY(EditDefaultsOnly, Category = "ASC")
+	TObjectPtr<UHexploreAbilitySystemComponent> HexploreAbilitySystemComponent;
+
+	UHexploreAbilitySystemComponent* GetASC();
 };
