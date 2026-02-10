@@ -3,14 +3,20 @@
 
 #include "AbilitySystem/Abilities/HexploreAttack.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Actor/HexploreMelee.h"
 #include "Interaction/CombatInterface.h"
 
 void UHexploreAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+}
 
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+void UHexploreAttack::SpawnAttack(const FVector& TargetLocation)
+{
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
@@ -29,8 +35,10 @@ void UHexploreAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 		);
 
-		// TODO: Give the buff a GameplayEffectSpec for applying a buff.
-
+		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		Melee->DamageEffectSpecHandle = SpecHandle;
+		
 		Melee->FinishSpawning(SpawnTransform);
 	}
 }

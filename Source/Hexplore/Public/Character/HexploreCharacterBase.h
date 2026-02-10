@@ -73,7 +73,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<UGameplayAbility> BasicAttackClass;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Replicated, Category = "Combat")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
 	TObjectPtr<AActor> CurrentTarget;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
