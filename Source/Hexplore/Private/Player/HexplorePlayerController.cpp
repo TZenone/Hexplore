@@ -112,9 +112,9 @@ void AHexplorePlayerController::RMB(const FInputActionValue& InputActionValue)
 	AActor* HitActor = CursorHit.GetActor();
 
 	// Only proceed if it's a valid target and different from current
-	if (Cast<ITargetInterface>(HitActor) && HitActor != HexploreCharacter->GetCurrentTarget())
+	if (Cast<ITargetInterface>(HitActor) && HitActor != HexploreCharacter->GetCombatTarget())
 	{
-		HexploreCharacter->SetCurrentTarget(HitActor);
+		HexploreCharacter->SetCombatTarget(HitActor);
 	}
 }
 

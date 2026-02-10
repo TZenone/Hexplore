@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "AbilitySystem/HexploreAttributeSet.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
 #include "HexploreCharacterBase.generated.h"
 
 class UHexploreGameplayAbility;
@@ -24,8 +26,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; };
 
-	void SetCurrentTarget(AActor* Target);
-	AActor* GetCurrentTarget() const;
+	void SetCombatTarget(AActor* Target);
+	void ClearCombatTarget();
+	AActor* GetCombatTarget() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -66,6 +69,19 @@ protected:
 	void AddCharacterAbilities();
 	
 	/*
+	 * Combat 
+	 */
+
+	void AttackSpeedChanged(const FOnAttributeChangeData& Data);
+	void TryAutoAttack() const;
+	
+	/*
+	* End Combat 
+	*/
+	
+	
+	
+	/*
 	 * End GAS
 	 */
 
@@ -73,14 +89,19 @@ protected:
 	 * Combat 
 	 */
 
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnAttackSpeedChanged;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<UGameplayAbility> BasicAttackClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
-	TObjectPtr<AActor> CurrentTarget;
+	TObjectPtr<AActor> CombatTarget;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
 	bool bIsInCombat = false;
+	
+	FTimerHandle AutoAttackTimerHandle;
 
 	/*
 	* End Combat 

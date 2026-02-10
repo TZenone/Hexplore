@@ -36,6 +36,7 @@ public:
 	FGameplayTag Attributes_Secondary_StaminaRegen;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxStamina;
+	FGameplayTag Attributes_Secondary_AttackSpeed;
 
 	// Input
 	FGameplayTag Input_LMB;

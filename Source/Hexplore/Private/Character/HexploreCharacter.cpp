@@ -58,4 +58,6 @@ void AHexploreCharacter::InitAbilityActorInfo()
 	}
 
 	InitializeDefaultAttributes();
+	
+	Super::InitAbilityActorInfo();
 }

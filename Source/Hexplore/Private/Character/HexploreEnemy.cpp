@@ -57,6 +57,8 @@ void AHexploreEnemy::InitAbilityActorInfo()
 	Cast<UHexploreAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	
 	InitializeDefaultAttributes();
+	
+	Super::InitAbilityActorInfo();
 }
 
 void AHexploreEnemy::HighlightActor()

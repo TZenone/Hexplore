@@ -63,6 +63,10 @@ void FHexploreGameplayTags::InitializeNativeGameplayTags()
 		FName("Attributes.Secondary.MaxStamina"),
 		FString("Maximum stamina.")
 		);
+	GameplayTags.Attributes_Secondary_AttackSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Secondary.AttackSpeed"),
+		FString("Attack speed.")
+		);
 
 	// Input Tags
 	GameplayTags.Input_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(

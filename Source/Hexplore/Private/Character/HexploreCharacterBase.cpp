@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
+#include "AbilitySystem/HexploreAttributeSet.h"
 
 AHexploreCharacterBase::AHexploreCharacterBase()
 {
@@ -28,7 +29,10 @@ void AHexploreCharacterBase::BeginPlay()
 
 void AHexploreCharacterBase::InitAbilityActorInfo()
 {
-	
+	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetAttackSpeedAttribute()).AddUObject(this, &AHexploreCharacterBase::AttackSpeedChanged);
+	}
 }
 
 FVector AHexploreCharacterBase::GetBuffSocketLocation()
@@ -61,18 +65,50 @@ void AHexploreCharacterBase::AddCharacterAbilities()
 	HexploreASC->AddCharacterAbilities(StartupAbilities);
 }
 
-void AHexploreCharacterBase::SetCurrentTarget(AActor* Target)
+// Function to Update the attack speed in case it gets modified During Combat
+void AHexploreCharacterBase::AttackSpeedChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Current Target of [%s] is [%s]"), *GetName(),  *Target->GetName());
-	CurrentTarget = Target;
-	bIsInCombat = true;
-	
-	GetAbilitySystemComponent()->TryActivateAbilityByClass(BasicAttackClass);
+	// If we're not in combat, return.
+	if (!bIsInCombat) return;
+
+	// Else, Clear the running timer, and update it with the new AttackSpeed Attribute value received from the delegate. 
+	GetWorldTimerManager().ClearTimer(AutoAttackTimerHandle);
+	TryAutoAttack();
+	GetWorldTimerManager().SetTimer(AutoAttackTimerHandle,this, &AHexploreCharacterBase::TryAutoAttack, Data.NewValue, true);
+	UE_LOG(LogTemp, Warning, TEXT("Starting Timer in AttackSpeedChanged & Firing AutoAttack"));
 }
 
-AActor* AHexploreCharacterBase::GetCurrentTarget() const
+void AHexploreCharacterBase::TryAutoAttack() const
 {
-	if (CurrentTarget == nullptr) return nullptr;
-	return CurrentTarget;
+	AbilitySystemComponent->TryActivateAbilityByClass(BasicAttackClass);
+}
+
+void AHexploreCharacterBase::SetCombatTarget(AActor* Target)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Current Target of [%s] is [%s]"), *GetName(),  *Target->GetName());
+	CombatTarget = Target;
+	bIsInCombat = true;
+	
+	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
+	{
+		TryAutoAttack();
+		GetWorldTimerManager().SetTimer(AutoAttackTimerHandle,this, &AHexploreCharacterBase::TryAutoAttack, AS->GetAttackSpeed(), true);
+		UE_LOG(LogTemp, Warning, TEXT("Starting Timer in SetCombatTarget & Firing AutoAttack"));
+	}
+	
+}
+
+void AHexploreCharacterBase::ClearCombatTarget()
+{
+	if (CombatTarget != nullptr)
+	{
+		CombatTarget = nullptr;
+		bIsInCombat = false;
+	}
+}
+
+AActor* AHexploreCharacterBase::GetCombatTarget() const
+{
+	return CombatTarget;
 }
 
