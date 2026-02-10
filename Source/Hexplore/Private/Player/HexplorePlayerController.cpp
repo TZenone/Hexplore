@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "Character/HexploreCharacter.h"
+#include "Character/HexploreCharacterBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Input/HexploreInputComponent.h"
 #include "Interaction/TargetInterface.h"
@@ -53,6 +54,7 @@ void AHexplorePlayerController::SetupInputComponent()
 	HexploreInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AHexplorePlayerController::Move);
 	HexploreInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHexplorePlayerController::SprintStart);
 	HexploreInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::SprintEnd);
+	HexploreInputComponent->BindAction(RMBAction, ETriggerEvent::Completed, this, &AHexplorePlayerController::RMB);
 
 	HexploreInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 
@@ -94,6 +96,25 @@ void AHexplorePlayerController::SprintEnd(const FInputActionValue& InputActionVa
 		AHexploreCharacter* HexploreCharacter = Cast<AHexploreCharacter>(ControlledPawn);
 		UCharacterMovementComponent* Movement = HexploreCharacter->GetCharacterMovement();
 		Movement->MaxWalkSpeed = 300.f;
+	}
+}
+
+void AHexplorePlayerController::RMB(const FInputActionValue& InputActionValue)
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+
+	if (!CursorHit.bBlockingHit) return;
+
+	AHexploreCharacter* HexploreCharacter = GetPawn<AHexploreCharacter>();
+	if (!HexploreCharacter) return;
+
+	AActor* HitActor = CursorHit.GetActor();
+
+	// Only proceed if it's a valid target and different from current
+	if (Cast<ITargetInterface>(HitActor) && HitActor != HexploreCharacter->GetCurrentTarget())
+	{
+		HexploreCharacter->SetCurrentTarget(HitActor);
 	}
 }
 

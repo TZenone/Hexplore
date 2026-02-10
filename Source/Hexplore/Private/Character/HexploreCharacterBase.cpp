@@ -60,3 +60,18 @@ void AHexploreCharacterBase::AddCharacterAbilities()
 	HexploreASC->AddCharacterAbilities(StartupAbilities);
 }
 
+void AHexploreCharacterBase::SetCurrentTarget(AActor* Target)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Current Target of [%s] is [%s]"), *GetName(),  *Target->GetName());
+	CurrentTarget = Target;
+	bIsInCombat = true;
+	
+	GetAbilitySystemComponent()->TryActivateAbilityByClass(BasicAttackClass);
+}
+
+AActor* AHexploreCharacterBase::GetCurrentTarget() const
+{
+	if (CurrentTarget == nullptr) return nullptr;
+	return CurrentTarget;
+}
+

@@ -42,9 +42,13 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> SprintAction;
 
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> RMBAction;
+
 	void Move(const FInputActionValue& InputActionValue);
 	void SprintStart(const FInputActionValue& InputActionValue);
 	void SprintEnd(const FInputActionValue& InputActionValue);
+	void RMB(const FInputActionValue& InputActionValue);
 	
 	void CursorTrace();
 

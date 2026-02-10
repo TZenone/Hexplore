@@ -15,6 +15,8 @@ class HEXPLORE_API UHexploreGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability")
+	float AbilityRange = 200.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	FGameplayTag StartupInputTag;

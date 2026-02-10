@@ -41,6 +41,7 @@ void UHexploreAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, CritMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, StaminaRegen, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHexploreAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
 	
 }
 
@@ -181,4 +182,9 @@ void UHexploreAttributeSet::OnRep_HealthRegen(const FGameplayAttributeData& OldH
 void UHexploreAttributeSet::OnRep_StaminaRegen(const FGameplayAttributeData& OldStaminaRegen) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, StaminaRegen, OldStaminaRegen);
+}
+
+void UHexploreAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHexploreAttributeSet, AttackSpeed, OldAttackSpeed);
 }

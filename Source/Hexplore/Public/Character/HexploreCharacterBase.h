@@ -8,6 +8,7 @@
 #include "Interaction/CombatInterface.h"
 #include "HexploreCharacterBase.generated.h"
 
+class UHexploreGameplayAbility;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
@@ -23,6 +24,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; };
 
+	void SetCurrentTarget(AActor* Target);
+	AActor* GetCurrentTarget() const;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo();
@@ -34,6 +38,10 @@ protected:
 	FName BuffSocketName;
 
 	virtual FVector GetBuffSocketLocation() override;
+
+	/*
+	 * GAS
+	 */
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -53,6 +61,27 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 	void InitializeDefaultAttributes() const;
 	void AddCharacterAbilities();
+	
+	/*
+	 * End GAS
+	 */
+
+	/*
+	 * Combat 
+	 */
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UGameplayAbility> BasicAttackClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Replicated, Category = "Combat")
+	TObjectPtr<AActor> CurrentTarget;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
+	bool bIsInCombat = false;
+
+	/*
+	* End Combat 
+	*/
 
 private:
 	

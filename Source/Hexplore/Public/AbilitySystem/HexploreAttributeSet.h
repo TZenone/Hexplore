@@ -158,6 +158,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_StaminaRegen, Category = "Secondary Attributes")
 	FGameplayAttributeData StaminaRegen;
 	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, StaminaRegen);
+
+	UPROPERTY(BlueprintReadOnly, Replicated, ReplicatedUsing = OnRep_AttackSpeed, Category = "Secondary Attributes")
+	FGameplayAttributeData AttackSpeed;
+	ATTRIBUTE_ACCESSORS(UHexploreAttributeSet, AttackSpeed);
 	
 	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& OldArmor) const;
@@ -179,6 +183,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_StaminaRegen(const FGameplayAttributeData& OldStaminaRegen) const;
+
+	UFUNCTION()
+	void OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed) const;
 	
 
 private:
