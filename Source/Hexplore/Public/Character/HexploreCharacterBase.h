@@ -17,6 +17,8 @@ class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEngagementSignature, AActor*, Actor);
+
 UCLASS(Abstract)
 class HEXPLORE_API AHexploreCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
@@ -82,6 +84,10 @@ protected:
 	 * Combat 
 	 */
 
+	void EngageTarget(AActor* TargetToEngage);
+	
+	void DisengageTarget(AActor* TargetToDisengage);
+
 	void AttackSpeedChanged(const FOnAttributeChangeData& Data);
 	void TryAutoAttack() const;
 
@@ -111,9 +117,18 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
+	TObjectPtr<AActor> EngagedTarget;
 
+	FEngagementSignature EngagedTargetAdded;
+	FEngagementSignature EngagedTargetRemoved;
+	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
 	bool bIsInCombat = false;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
+	float EngagementRadius = 200.f;
 	
 	FTimerHandle AutoAttackTimerHandle;
 

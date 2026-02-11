@@ -21,7 +21,7 @@ AHexploreCharacterBase::AHexploreCharacterBase()
 	EngagementRange->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	EngagementRange->SetCollisionResponseToAllChannels(ECR_Ignore);
 	EngagementRange->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	EngagementRange->SetSphereRadius(200.f);
+	EngagementRange->SetSphereRadius(EngagementRadius);
 }
 
 UAbilitySystemComponent* AHexploreCharacterBase::GetAbilitySystemComponent() const
@@ -75,6 +75,18 @@ void AHexploreCharacterBase::AddCharacterAbilities()
 	HexploreASC->AddCharacterAbilities(StartupAbilities);
 }
 
+void AHexploreCharacterBase::EngageTarget(AActor* TargetToEngage)
+{
+	EngagedTarget = TargetToEngage;
+	EngagedTargetAdded.Broadcast(TargetToEngage);
+}
+
+void AHexploreCharacterBase::DisengageTarget(AActor* TargetToDisengage)
+{
+	EngagedTarget = nullptr;
+	EngagedTargetRemoved.Broadcast(TargetToDisengage);
+}
+
 // Function to Update the attack speed in case it gets modified During Combat
 void AHexploreCharacterBase::AttackSpeedChanged(const FOnAttributeChangeData& Data)
 {
@@ -99,6 +111,15 @@ void AHexploreCharacterBase::OnEngagementRangeBeginOverlap(UPrimitiveComponent* 
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
+		if (OtherActor == CombatTarget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range and Started Melee combat."), *OtherActor->GetName(), *GetName());
+			EngageTarget(OtherActor);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range but wasn't the Combat Target."), *OtherActor->GetName(), *GetName());
+		}
 	}
 }
 
@@ -108,6 +129,15 @@ void AHexploreCharacterBase::OnEngagementRangeEndOverlap(UPrimitiveComponent* Ov
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
+		if (OtherActor == CombatTarget)
+		{
+			DisengageTarget(OtherActor);
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range and Triggered and Opportunity Attack."), *OtherActor->GetName(), *GetName());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range but wasn't the Combat Target."), *OtherActor->GetName(), *GetName());
+		}
 	}
 }
 
@@ -116,6 +146,13 @@ void AHexploreCharacterBase::SetCombatTarget(AActor* Target)
 	UE_LOG(LogTemp, Warning, TEXT("Current Target of [%s] is [%s]"), *GetName(),  *Target->GetName());
 	CombatTarget = Target;
 	bIsInCombat = true;
+
+	// Engage Target if already in Range
+	if (GetDistanceTo(Target) < EngagementRadius)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Target was already in Range, Engaging [%s]"), *Target->GetName());
+		EngageTarget(Target);
+	}
 	
 	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
 	{
