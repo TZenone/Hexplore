@@ -40,6 +40,12 @@ void AHexploreEnemy::PossessedBy(AController* NewController)
 
 	HexploreAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	HexploreAIController->RunBehaviorTree(BehaviorTree);
+	
+	HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), false);
+	
+	// TODO: No Character class right now, but will implement later
+	// HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Melee);
 }
 
 void AHexploreEnemy::BeginPlay()
@@ -79,6 +85,16 @@ void AHexploreEnemy::InitAbilityActorInfo()
 	InitializeDefaultAttributes();
 	
 	Super::InitAbilityActorInfo();
+}
+
+void AHexploreEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+	
+	// TODO: Implement real speed based on a move speed secondary Attribute
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : 300.f;
+	
+	HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AHexploreEnemy::HighlightActor()

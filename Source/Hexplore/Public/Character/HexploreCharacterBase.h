@@ -26,8 +26,13 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; };
 
-	void SetCombatTarget(AActor* Target);
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetCombatTarget(AActor* CombatTarget);
+	
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void ClearCombatTarget();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	AActor* GetCombatTarget() const;
 
 protected:

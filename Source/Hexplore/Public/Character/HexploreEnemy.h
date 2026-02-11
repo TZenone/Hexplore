@@ -49,6 +49,9 @@ protected:
 	
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+	bool bHitReacting = false;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
