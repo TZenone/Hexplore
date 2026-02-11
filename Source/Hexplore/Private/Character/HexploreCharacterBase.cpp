@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAttributeSet.h"
+#include "Components/SphereComponent.h"
 
 AHexploreCharacterBase::AHexploreCharacterBase()
 {
@@ -14,6 +15,13 @@ AHexploreCharacterBase::AHexploreCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	EngagementRange = CreateDefaultSubobject<USphereComponent>("EngagementRange");
+	EngagementRange->SetupAttachment(GetMesh());
+	EngagementRange->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	EngagementRange->SetCollisionResponseToAllChannels(ECR_Ignore);
+	EngagementRange->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	EngagementRange->SetSphereRadius(200.f);
 }
 
 UAbilitySystemComponent* AHexploreCharacterBase::GetAbilitySystemComponent() const
@@ -24,7 +32,9 @@ UAbilitySystemComponent* AHexploreCharacterBase::GetAbilitySystemComponent() con
 void AHexploreCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	EngagementRange->OnComponentBeginOverlap.AddDynamic(this, &AHexploreCharacterBase::OnEngagementRangeBeginOverlap);
+	EngagementRange->OnComponentEndOverlap.AddDynamic(this, &AHexploreCharacterBase::OnEngagementRangeEndOverlap);
 }
 
 void AHexploreCharacterBase::InitAbilityActorInfo()
@@ -81,6 +91,24 @@ void AHexploreCharacterBase::AttackSpeedChanged(const FOnAttributeChangeData& Da
 void AHexploreCharacterBase::TryAutoAttack() const
 {
 	AbilitySystemComponent->TryActivateAbilityByClass(BasicAttackClass);
+}
+
+void AHexploreCharacterBase::OnEngagementRangeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
+	}
+}
+
+void AHexploreCharacterBase::OnEngagementRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
+	}
 }
 
 void AHexploreCharacterBase::SetCombatTarget(AActor* Target)

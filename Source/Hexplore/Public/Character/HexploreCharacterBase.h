@@ -10,6 +10,7 @@
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "HexploreCharacterBase.generated.h"
 
+class USphereComponent;
 class UHexploreGameplayAbility;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -74,25 +75,33 @@ protected:
 	void AddCharacterAbilities();
 	
 	/*
+	 * End GAS
+	 */
+	
+	/*
 	 * Combat 
 	 */
 
 	void AttackSpeedChanged(const FOnAttributeChangeData& Data);
 	void TryAutoAttack() const;
+
+	UFUNCTION()
+	void OnEngagementRangeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnEngagementRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
 	/*
 	* End Combat 
 	*/
 	
-	
-	
-	/*
-	 * End GAS
-	 */
 
 	/*
 	 * Combat 
 	 */
+
+	UPROPERTY(VisibleAnywhere, Category = "Combat | Engagement")
+	TObjectPtr<USphereComponent> EngagementRange;	
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnAttackSpeedChanged;
