@@ -5,7 +5,11 @@
 
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAttributeSet.h"
+#include "AI/HexploreAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/HexploreUserWidget.h"
 
 AHexploreEnemy::AHexploreEnemy()
@@ -16,10 +20,26 @@ AHexploreEnemy::AHexploreEnemy()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
 	AttributeSet = CreateDefaultSubobject<UHexploreAttributeSet>("AttributeSet");
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+}
+
+void AHexploreEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!HasAuthority()) return;
+	HexploreAIController = Cast<AHexploreAIController>(NewController);
+
+	HexploreAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	HexploreAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AHexploreEnemy::BeginPlay()

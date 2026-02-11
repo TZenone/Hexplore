@@ -10,6 +10,9 @@
 #include "HexploreEnemy.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class AHexploreAIController;
+
 /**
  * 
  */
@@ -20,6 +23,7 @@ class HEXPLORE_API AHexploreEnemy : public AHexploreCharacterBase, public ITarge
 
 public:
 	AHexploreEnemy();
+	virtual void PossessedBy(AController* NewController) override;
 
 	/* Enemy Interface */
 	virtual void HighlightActor() override;
@@ -45,4 +49,11 @@ protected:
 	
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AHexploreAIController> HexploreAIController;
+	
 };
