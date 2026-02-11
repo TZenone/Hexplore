@@ -33,7 +33,7 @@ public:
 	void SetCombatTarget(AActor* CombatTarget);
 	
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void ClearCombatTarget();
+	virtual void ClearCombatTarget();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	AActor* GetCombatTarget() const;
@@ -88,9 +88,6 @@ protected:
 	
 	void DisengageTarget(AActor* TargetToDisengage);
 
-	void AttackSpeedChanged(const FOnAttributeChangeData& Data);
-	void TryAutoAttack() const;
-
 	UFUNCTION()
 	void OnEngagementRangeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -109,9 +106,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Combat | Engagement")
 	TObjectPtr<USphereComponent> EngagementRange;	
 
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeChangedSignature OnAttackSpeedChanged;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<UGameplayAbility> BasicAttackClass;
 
@@ -129,8 +123,6 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
 	float EngagementRadius = 200.f;
-	
-	FTimerHandle AutoAttackTimerHandle;
 
 	/*
 	* End Combat 

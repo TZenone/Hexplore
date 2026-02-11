@@ -17,11 +17,29 @@ class HEXPLORE_API AHexploreCharacter : public AHexploreCharacterBase
 public:
 	AHexploreCharacter();
 
+	virtual void BeginPlay() override;
+
 	/* Combat Interface */
 	/* End Combat Interface */
 
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+
+protected:
+
+	void AttackSpeedChanged(const FOnAttributeChangeData& Data);
+	void TryAutoAttack() const;
+	
+	UFUNCTION()
+	void OnEngaged(AActor* Target);
+
+	UFUNCTION()
+	void OnDisengaged(AActor* Target);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnAttackSpeedChanged;
+	
+	FTimerHandle AutoAttackTimerHandle;
 
 private:
 	virtual void InitAbilityActorInfo() override;

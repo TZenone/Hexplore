@@ -17,7 +17,7 @@ AHexploreCharacterBase::AHexploreCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	EngagementRange = CreateDefaultSubobject<USphereComponent>("EngagementRange");
-	EngagementRange->SetupAttachment(GetMesh());
+	EngagementRange->SetupAttachment(GetRootComponent());
 	EngagementRange->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	EngagementRange->SetCollisionResponseToAllChannels(ECR_Ignore);
 	EngagementRange->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
@@ -39,10 +39,7 @@ void AHexploreCharacterBase::BeginPlay()
 
 void AHexploreCharacterBase::InitAbilityActorInfo()
 {
-	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
-	{
-		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetAttackSpeedAttribute()).AddUObject(this, &AHexploreCharacterBase::AttackSpeedChanged);
-	}
+	
 }
 
 FVector AHexploreCharacterBase::GetBuffSocketLocation()
@@ -87,30 +84,16 @@ void AHexploreCharacterBase::DisengageTarget(AActor* TargetToDisengage)
 	EngagedTargetRemoved.Broadcast(TargetToDisengage);
 }
 
-// Function to Update the attack speed in case it gets modified During Combat
-void AHexploreCharacterBase::AttackSpeedChanged(const FOnAttributeChangeData& Data)
-{
-	// If we're not in combat, return.
-	if (!bIsInCombat) return;
-
-	// Else, Clear the running timer, and update it with the new AttackSpeed Attribute value received from the delegate. 
-	GetWorldTimerManager().ClearTimer(AutoAttackTimerHandle);
-	TryAutoAttack();
-	GetWorldTimerManager().SetTimer(AutoAttackTimerHandle,this, &AHexploreCharacterBase::TryAutoAttack, Data.NewValue, true);
-	UE_LOG(LogTemp, Warning, TEXT("Starting Timer in AttackSpeedChanged & Firing AutoAttack"));
-}
-
-void AHexploreCharacterBase::TryAutoAttack() const
-{
-	AbilitySystemComponent->TryActivateAbilityByClass(BasicAttackClass);
-}
-
 void AHexploreCharacterBase::OnEngagementRangeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor == this) return;
+	UE_LOG(LogTemp, Warning, TEXT("[%s] isnt the same actor, continuing."),  *GetName());
+	
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("[%s]'s Current Combat Target is [%s]."), *GetName(), CombatTarget != nullptr ? *CombatTarget->GetName() : TEXT("not set."));
 		if (OtherActor == CombatTarget)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range and Started Melee combat."), *OtherActor->GetName(), *GetName());
@@ -118,14 +101,20 @@ void AHexploreCharacterBase::OnEngagementRangeBeginOverlap(UPrimitiveComponent* 
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range but wasn't the Combat Target."), *OtherActor->GetName(), *GetName());
+			UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range but wasn't the Combat Target."), *OtherActor->GetName(), *GetName());
 		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] Doesnt pass the CombatInterface check."), *GetName());
 	}
 }
 
 void AHexploreCharacterBase::OnEngagementRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (OtherActor == this) return;
+	
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
@@ -153,20 +142,13 @@ void AHexploreCharacterBase::SetCombatTarget(AActor* Target)
 		UE_LOG(LogTemp, Warning, TEXT("Target was already in Range, Engaging [%s]"), *Target->GetName());
 		EngageTarget(Target);
 	}
-	
-	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
-	{
-		TryAutoAttack();
-		GetWorldTimerManager().SetTimer(AutoAttackTimerHandle,this, &AHexploreCharacterBase::TryAutoAttack, AS->GetAttackSpeed(), true);
-		UE_LOG(LogTemp, Warning, TEXT("Starting Timer in SetCombatTarget & Firing AutoAttack"));
-	}
-	
 }
 
 void AHexploreCharacterBase::ClearCombatTarget()
 {
 	if (CombatTarget != nullptr)
 	{
+		EngagedTarget = nullptr;
 		CombatTarget = nullptr;
 		bIsInCombat = false;
 	}

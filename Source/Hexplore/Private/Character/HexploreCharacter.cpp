@@ -22,6 +22,14 @@ AHexploreCharacter::AHexploreCharacter()
 	bUseControllerRotationYaw = false;
 }
 
+void AHexploreCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	EngagedTargetAdded.AddDynamic(this, &AHexploreCharacter::OnEngaged);
+	EngagedTargetRemoved.AddDynamic(this, &AHexploreCharacter::OnDisengaged);
+}
+
 void AHexploreCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -39,6 +47,41 @@ void AHexploreCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+// Function to Update the attack speed in case it gets modified During Combat
+void AHexploreCharacter::AttackSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	// If we're not in combat, return.
+	if (!AutoAttackTimerHandle.IsValid()) return;
+
+	// Else, Clear the running timer, and update it with the new AttackSpeed Attribute value received from the delegate. 
+	GetWorldTimerManager().ClearTimer(AutoAttackTimerHandle);
+	TryAutoAttack();
+	GetWorldTimerManager().SetTimer(AutoAttackTimerHandle,this, &AHexploreCharacter::TryAutoAttack, Data.NewValue, true);
+	UE_LOG(LogTemp, Warning, TEXT("Starting Timer in AttackSpeedChanged & Firing AutoAttack"));
+}
+
+void AHexploreCharacter::TryAutoAttack() const
+{
+	AbilitySystemComponent->TryActivateAbilityByClass(BasicAttackClass);
+}
+
+void AHexploreCharacter::OnEngaged(AActor* Target)
+{
+	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] is engaging [%s]'s Engagement Range."), *GetName(), *Target->GetName());
+		
+		TryAutoAttack();
+		GetWorldTimerManager().SetTimer(AutoAttackTimerHandle,this, &AHexploreCharacter::TryAutoAttack, AS->GetAttackSpeed(), true);
+		UE_LOG(LogTemp, Error, TEXT("Starting Timer in SetCombatTarget & Firing AutoAttack"));
+	}
+}
+
+void AHexploreCharacter::OnDisengaged(AActor* Target)
+{
+	GetWorldTimerManager().ClearTimer(AutoAttackTimerHandle);
+}
+
 void AHexploreCharacter::InitAbilityActorInfo()
 {
 	AHexplorePlayerState* PS =  GetPlayerState<AHexplorePlayerState>();
@@ -48,6 +91,11 @@ void AHexploreCharacter::InitAbilityActorInfo()
 	
 	AbilitySystemComponent = PS->GetAbilitySystemComponent();
 	AttributeSet = PS->GetAttributeSet();
+
+	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AS->GetAttackSpeedAttribute()).AddUObject(this, &AHexploreCharacter::AttackSpeedChanged);
+	}
 
 	if (AHexplorePlayerController* PC = Cast<AHexplorePlayerController>(GetController()))
 	{
