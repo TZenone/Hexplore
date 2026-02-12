@@ -67,6 +67,8 @@ void AHexploreCharacter::TryAutoAttack() const
 
 void AHexploreCharacter::OnEngaged(AActor* Target)
 {
+	Super::OnEngaged(Target);
+	
 	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] is engaging [%s]'s Engagement Range."), *GetName(), *Target->GetName());
@@ -79,6 +81,8 @@ void AHexploreCharacter::OnEngaged(AActor* Target)
 
 void AHexploreCharacter::OnDisengaged(AActor* Target)
 {
+	Super::OnDisengaged(Target);
+	
 	GetWorldTimerManager().ClearTimer(AutoAttackTimerHandle);
 }
 

@@ -46,6 +46,8 @@ void AHexploreEnemy::PossessedBy(AController* NewController)
 	
 	// TODO: No Character class right now, but will implement later
 	// HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Melee);
+
+	AddCharacterAbilities();
 }
 
 void AHexploreEnemy::BeginPlay()
@@ -57,6 +59,9 @@ void AHexploreEnemy::BeginPlay()
 	{
 		HexploreUserWidget->SetWidgetController(this);
 	}
+
+	EngagedTargetAdded.AddDynamic(this, &AHexploreEnemy::OnEngaged);
+	EngagedTargetRemoved.AddDynamic(this, &AHexploreEnemy::OnDisengaged);
 	
 	if (const UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
 	{
@@ -85,6 +90,20 @@ void AHexploreEnemy::InitAbilityActorInfo()
 	InitializeDefaultAttributes();
 	
 	Super::InitAbilityActorInfo();
+}
+
+void AHexploreEnemy::OnEngaged(AActor* Target)
+{
+	Super::OnEngaged(Target);
+	
+	HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("IsEngaged"), true);
+}
+
+void AHexploreEnemy::OnDisengaged(AActor* Target)
+{
+	Super::OnDisengaged(Target);
+	
+	HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("IsEngaged"), false);
 }
 
 void AHexploreEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)

@@ -49,6 +49,11 @@ protected:
 	
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo() override;
+
+	virtual void OnEngaged(AActor* Target) override;
+
+	virtual void OnDisengaged(AActor* Target) override;
+	
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	bool bHitReacting = false;

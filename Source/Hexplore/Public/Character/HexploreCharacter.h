@@ -30,11 +30,9 @@ protected:
 	void AttackSpeedChanged(const FOnAttributeChangeData& Data);
 	void TryAutoAttack() const;
 	
-	UFUNCTION()
-	void OnEngaged(AActor* Target);
+	virtual void OnEngaged(AActor* Target) override;
 
-	UFUNCTION()
-	void OnDisengaged(AActor* Target);
+	virtual void OnDisengaged(AActor* Target) override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnAttackSpeedChanged;

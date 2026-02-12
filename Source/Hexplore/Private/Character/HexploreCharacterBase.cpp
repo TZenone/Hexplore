@@ -7,6 +7,7 @@
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAttributeSet.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AHexploreCharacterBase::AHexploreCharacterBase()
 {
@@ -84,8 +85,18 @@ void AHexploreCharacterBase::DisengageTarget(AActor* TargetToDisengage)
 	EngagedTargetRemoved.Broadcast(TargetToDisengage);
 }
 
+void AHexploreCharacterBase::OnEngaged(AActor* Target)
+{
+	GetCharacterMovement()->MaxWalkSpeed = 200.f;
+}
+
+void AHexploreCharacterBase::OnDisengaged(AActor* Target)
+{
+	// GetCharacterMovement()->MaxWalkSpeed = 300.f;
+}
+
 void AHexploreCharacterBase::OnEngagementRangeBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                           UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor == this) return;
 	UE_LOG(LogTemp, Warning, TEXT("[%s] isnt the same actor, continuing."),  *GetName());
