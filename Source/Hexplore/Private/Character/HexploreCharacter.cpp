@@ -6,12 +6,15 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Player/HexplorePlayerController.h"
 #include "Player/HexplorePlayerState.h"
 #include "UI/HUD/HexploreHUD.h"
 
 AHexploreCharacter::AHexploreCharacter()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
@@ -20,6 +23,21 @@ AHexploreCharacter::AHexploreCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+}
+
+void AHexploreCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (EngagedTarget != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Changing Rotation"));
+		FRotator Rotation = (EngagedTarget->GetActorLocation() - GetActorLocation()).Rotation();
+		Rotation.Pitch = 0.0f;
+		Rotation.Roll = 0.0f;
+		GetController()->SetControlRotation(Rotation);
+		
+	}
 }
 
 void AHexploreCharacter::BeginPlay()
@@ -69,6 +87,11 @@ void AHexploreCharacter::OnEngaged(AActor* Target)
 {
 	Super::OnEngaged(Target);
 	
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	
+	
+	
 	if (UHexploreAttributeSet* AS = CastChecked<UHexploreAttributeSet>(AttributeSet))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("[%s] is engaging [%s]'s Engagement Range."), *GetName(), *Target->GetName());
@@ -82,6 +105,14 @@ void AHexploreCharacter::OnEngaged(AActor* Target)
 void AHexploreCharacter::OnDisengaged(AActor* Target)
 {
 	Super::OnDisengaged(Target);
+
+	USpringArmComponent* SpringArm = FindComponentByClass<USpringArmComponent>();
+	SpringArm->bUsePawnControlRotation = false;
+	SpringArm->bInheritYaw = false;
+	GetController()->SetControlRotation(GetActorRotation());
+	
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	
 	GetWorldTimerManager().ClearTimer(AutoAttackTimerHandle);
 }

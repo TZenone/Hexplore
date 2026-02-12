@@ -16,6 +16,7 @@ class HEXPLORE_API AHexploreCharacter : public AHexploreCharacterBase
 
 public:
 	AHexploreCharacter();
+	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
 

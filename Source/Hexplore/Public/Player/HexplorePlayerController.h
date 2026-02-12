@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "HexplorePlayerController.generated.h"
 
+class USpringArmComponent;
 class UHexploreInputConfig;
 class UInputMappingContext;
 class UInputAction;
@@ -43,12 +44,36 @@ private:
 	TObjectPtr<UInputAction> SprintAction;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> LMBAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> RMBAction;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> MouseDeltaAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ScrollWheelAction;
+
+	TObjectPtr<USpringArmComponent> CachedSpringArm;
+	USpringArmComponent* GetSpringArm();
+
+	bool bIsLMBDown = false;
+	bool bIsRMBDown = false;
+	bool bIsLMBDragging = false;
+	bool bIsRMBDragging = false;
+	float SensitivityMultiplier = 0.5f;
 
 	void Move(const FInputActionValue& InputActionValue);
 	void SprintStart(const FInputActionValue& InputActionValue);
 	void SprintEnd(const FInputActionValue& InputActionValue);
-	void RMB(const FInputActionValue& InputActionValue);
+
+	void LMBStarted(const FInputActionValue& InputActionValue);
+	void LMBCompleted(const FInputActionValue& InputActionValue);
+	void RMBStarted(const FInputActionValue& InputActionValue);
+	void RMBCompleted(const FInputActionValue& InputActionValue);
+	void MouseDelta(const FInputActionValue& InputActionValue);
+	void ScrollWheel(const FInputActionValue& InputActionValue);
 	
 	void CursorTrace();
 
