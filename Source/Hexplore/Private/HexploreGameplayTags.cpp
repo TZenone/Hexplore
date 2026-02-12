@@ -129,4 +129,15 @@ void FHexploreGameplayTags::InitializeNativeGameplayTags()
 		FName("Input.V"),
 		FString("Input Tag for V Key.")
 		);
+
+	// Status Tags
+	GameplayTags.Status_General_Fleeing = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Status.General.Fleeing"),
+		FString("Status tag for fleeing.")
+		);
+	GameplayTags.Status_General_ImmuneToOpportunityAction = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Status.General.ImmuneToOpportunityAction"),
+		FString("Status tag for being immune to opportunity actions.")
+		);
+	
 }

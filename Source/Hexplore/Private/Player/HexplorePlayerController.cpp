@@ -134,6 +134,12 @@ void AHexplorePlayerController::SprintStart(const FInputActionValue& InputAction
 
 	bIsSprinting = true;
 	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	
+	const FGameplayTag FleeingTag = FGameplayTag::RequestGameplayTag(FName("Status.General.Fleeing"));
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Tag Added to [%s]"), *FleeingTag.GetTagName().ToString() , *PlayerCharacter->GetName());
+	PlayerCharacter->GetAbilitySystemComponent()->AddLooseGameplayTag(FleeingTag);
+	const FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(FName("Status.General.ImmuneToOpportunityAction"));
+	PlayerCharacter->GetAbilitySystemComponent()->AddLooseGameplayTag(ImmuneTag);
 	UpdateRotationMode();
 }
 
@@ -144,6 +150,8 @@ void AHexplorePlayerController::SprintEnd(const FInputActionValue& InputActionVa
 
 	bIsSprinting = false;
 	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	const FGameplayTag FleeingTag = FGameplayTag::RequestGameplayTag(FName("Status.General.Fleeing"));
+	PlayerCharacter->GetAbilitySystemComponent()->RemoveLooseGameplayTag(FleeingTag);
 	UpdateRotationMode();
 }
 

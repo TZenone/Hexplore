@@ -38,6 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	AActor* GetCombatTarget() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void OpportunityAction();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitAbilityActorInfo();
@@ -114,6 +117,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TSubclassOf<UGameplayAbility> BasicAttackClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UGameplayAbility> OpportunityActionClass;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;

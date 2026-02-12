@@ -132,6 +132,7 @@ void AHexploreCharacterBase::OnEngagementRangeEndOverlap(UPrimitiveComponent* Ov
 		if (OtherActor == CombatTarget)
 		{
 			DisengageTarget(OtherActor);
+			AbilitySystemComponent->TryActivateAbilityByClass(OpportunityActionClass);
 			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range and Triggered and Opportunity Attack."), *OtherActor->GetName(), *GetName());
 		}
 		else
@@ -168,5 +169,10 @@ void AHexploreCharacterBase::ClearCombatTarget()
 AActor* AHexploreCharacterBase::GetCombatTarget() const
 {
 	return CombatTarget;
+}
+
+void AHexploreCharacterBase::OpportunityAction()
+{
+	
 }
 

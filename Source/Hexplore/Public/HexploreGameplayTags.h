@@ -54,6 +54,11 @@ public:
 	FGameplayTag Input_G;
 	FGameplayTag Input_C;
 	FGameplayTag Input_V;
+
+	// Status
+	FGameplayTag Status_General_Fleeing;
+	FGameplayTag Status_General_ImmuneToOpportunityAction;
+	
 	
 protected:
 
