@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAttributeSet.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -28,6 +29,11 @@ AHexploreCharacterBase::AHexploreCharacterBase()
 UAbilitySystemComponent* AHexploreCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+UAnimMontage* AHexploreCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
 }
 
 void AHexploreCharacterBase::BeginPlay()
@@ -87,7 +93,7 @@ void AHexploreCharacterBase::DisengageTarget(AActor* TargetToDisengage)
 
 void AHexploreCharacterBase::OnEngaged(AActor* Target)
 {
-	GetCharacterMovement()->MaxWalkSpeed = 200.f;
+	GetCharacterMovement()->MaxWalkSpeed = EngagementMovementSpeed;
 }
 
 void AHexploreCharacterBase::OnDisengaged(AActor* Target)
@@ -99,25 +105,13 @@ void AHexploreCharacterBase::OnEngagementRangeBeginOverlap(UPrimitiveComponent* 
                                                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor == this) return;
-	UE_LOG(LogTemp, Warning, TEXT("[%s] isnt the same actor, continuing."),  *GetName());
 	
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
-		UE_LOG(LogTemp, Warning, TEXT("[%s]'s Current Combat Target is [%s]."), *GetName(), CombatTarget != nullptr ? *CombatTarget->GetName() : TEXT("not set."));
 		if (OtherActor == CombatTarget)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range and Started Melee combat."), *OtherActor->GetName(), *GetName());
 			EngageTarget(OtherActor);
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[%s] Entered [%s]'s Engagement Range but wasn't the Combat Target."), *OtherActor->GetName(), *GetName());
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[%s] Doesnt pass the CombatInterface check."), *GetName());
 	}
 }
 
@@ -128,30 +122,22 @@ void AHexploreCharacterBase::OnEngagementRangeEndOverlap(UPrimitiveComponent* Ov
 	
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(OtherActor))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range."), *OtherActor->GetName(), *GetName());
 		if (OtherActor == CombatTarget)
 		{
 			DisengageTarget(OtherActor);
 			AbilitySystemComponent->TryActivateAbilityByClass(OpportunityActionClass);
-			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range and Triggered and Opportunity Attack."), *OtherActor->GetName(), *GetName());
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[%s] Exited [%s]'s Engagement Range but wasn't the Combat Target."), *OtherActor->GetName(), *GetName());
 		}
 	}
 }
 
 void AHexploreCharacterBase::SetCombatTarget(AActor* Target)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Current Target of [%s] is [%s]"), *GetName(),  *Target->GetName());
 	CombatTarget = Target;
 	bIsInCombat = true;
 
 	// Engage Target if already in Range
 	if (GetDistanceTo(Target) < EngagementRadius)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Target was already in Range, Engaging [%s]"), *Target->GetName());
 		EngageTarget(Target);
 	}
 }
@@ -174,5 +160,26 @@ AActor* AHexploreCharacterBase::GetCombatTarget() const
 void AHexploreCharacterBase::OpportunityAction()
 {
 	
+}
+
+void AHexploreCharacterBase::Die()
+{
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	
+	MulticastHandleDeath();
+}
+
+void AHexploreCharacterBase::MulticastHandleDeath_Implementation()
+{
+	/*Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);*/
+
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(false);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+	GetCapsuleComponent()->SetCollisionEnabled((ECollisionEnabled::NoCollision));
 }
 

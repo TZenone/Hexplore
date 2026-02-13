@@ -3,6 +3,7 @@
 
 #include "Character/HexploreEnemy.h"
 
+#include "HexploreGameplayTags.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAttributeSet.h"
 #include "AI/HexploreAIController.h"
@@ -53,6 +54,7 @@ void AHexploreEnemy::PossessedBy(AController* NewController)
 void AHexploreEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
 
 	if (UHexploreUserWidget* HexploreUserWidget = Cast<UHexploreUserWidget>(HealthBar->GetUserWidgetObject()))
@@ -76,6 +78,10 @@ void AHexploreEnemy::BeginPlay()
 		{
 			OnMaxHealthChanged.Broadcast(Data.NewValue);
 		});
+		
+		AbilitySystemComponent->RegisterGameplayTagEvent(FHexploreGameplayTags::Get().Status_General_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+			this, &AHexploreEnemy::HitReactTagChanged
+		);
 
 		OnHealthChanged.Broadcast(AS->GetHealth());
 		OnMaxHealthChanged.Broadcast(AS->GetMaxHealth());
@@ -111,7 +117,7 @@ void AHexploreEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 Ne
 	bHitReacting = NewCount > 0;
 	
 	// TODO: Implement real speed based on a move speed secondary Attribute
-	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : 300.f;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 	
 	HexploreAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
@@ -124,4 +130,10 @@ void AHexploreEnemy::HighlightActor()
 void AHexploreEnemy::UnHighlightActor()
 {
 	bHighlighted = false;
+}
+
+void AHexploreEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
 }

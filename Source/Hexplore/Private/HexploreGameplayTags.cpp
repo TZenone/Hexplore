@@ -130,6 +130,26 @@ void FHexploreGameplayTags::InitializeNativeGameplayTags()
 		FString("Input Tag for V Key.")
 		);
 
+	// Abilities
+
+	GameplayTags.Abilities_Basic_OpportunityAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Basic.OpportunityAttack"),
+		FString("Opportunity Attack Tag.")
+		);
+	
+	// Cooldown
+
+	GameplayTags.Cooldown_Basic_OpportunityAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Cooldown.Basic.OpportunityAttack"),
+		FString("Opportunity Attack cooldown Tag.")
+		);
+	
+	// Damage
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage"),
+		FString("Damage.")
+		);
+	
 	// Status Tags
 	GameplayTags.Status_General_Fleeing = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Status.General.Fleeing"),
@@ -138,6 +158,10 @@ void FHexploreGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Status_General_ImmuneToOpportunityAction = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Status.General.ImmuneToOpportunityAction"),
 		FString("Status tag for being immune to opportunity actions.")
+		);
+	GameplayTags.Status_General_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Status.General.HitReact"),
+		FString("Status tag for hit reacting.")
 		);
 	
 }

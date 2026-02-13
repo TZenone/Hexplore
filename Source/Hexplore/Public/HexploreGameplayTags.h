@@ -55,9 +55,19 @@ public:
 	FGameplayTag Input_C;
 	FGameplayTag Input_V;
 
+	// Abilities
+	FGameplayTag Abilities_Basic_OpportunityAttack;
+
+	// Cooldown
+	FGameplayTag Cooldown_Basic_OpportunityAttack;
+
+	// Damage
+	FGameplayTag Damage;
+
 	// Status
 	FGameplayTag Status_General_Fleeing;
 	FGameplayTag Status_General_ImmuneToOpportunityAction;
+	FGameplayTag Status_General_HitReact;
 	
 	
 protected:

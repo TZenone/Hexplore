@@ -31,16 +31,27 @@ public:
 	/* End Enemy Interface */
 	
 	/* Combat Interface */
+	virtual void Die() override;
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	/* End Combat Interface */
-
-	UPROPERTY(BlueprintReadOnly)
-	bool bHighlighted = false;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float LifeSpan = 30.f;
+
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadOnly)
+	float BaseWalkSpeed = 250.f;
+	
+	UPROPERTY(BlueprintReadOnly)
+	bool bHighlighted = false;
+	
 
 protected:
 
@@ -51,12 +62,7 @@ protected:
 	virtual void InitAbilityActorInfo() override;
 
 	virtual void OnEngaged(AActor* Target) override;
-
 	virtual void OnDisengaged(AActor* Target) override;
-	
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-
-	bool bHitReacting = false;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;

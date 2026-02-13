@@ -8,6 +8,8 @@
 
 class AHexploreMelee;
 class UGameplayEffect;
+class UAnimMontage;
+
 /**
  * 
  */
@@ -22,4 +24,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UAnimMontage> AttackMontage;
 };

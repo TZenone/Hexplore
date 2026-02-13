@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/HexploreCharacterBase.h"
+#include "UI/WidgetController/OverlayWidgetController.h"
 #include "HexploreCharacter.generated.h"
 
 /**

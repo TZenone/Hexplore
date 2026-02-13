@@ -7,7 +7,6 @@
 #include "AbilitySystem/HexploreAttributeSet.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
-#include "UI/WidgetController/OverlayWidgetController.h"
 #include "HexploreCharacterBase.generated.h"
 
 class USphereComponent;
@@ -16,6 +15,7 @@ class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
+class UAnimMontage;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEngagementSignature, AActor*, Actor);
 
@@ -40,6 +40,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void OpportunityAction();
+
+	virtual void Die() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -111,6 +118,9 @@ protected:
 	/*
 	 * Combat 
 	 */
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 
 	UPROPERTY(VisibleAnywhere, Category = "Combat | Engagement")
 	TObjectPtr<USphereComponent> EngagementRange;	
@@ -135,6 +145,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
 	float EngagementRadius = 200.f;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
+	float EngagementMovementSpeed = 150.f;
 
 	/*
 	* End Combat 
