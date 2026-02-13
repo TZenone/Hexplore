@@ -149,7 +149,7 @@ void AHexplorePlayerController::SprintEnd(const FInputActionValue& InputActionVa
 	if (!PlayerCharacter) return;
 
 	bIsSprinting = false;
-	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed = 150.f;
 	const FGameplayTag FleeingTag = FGameplayTag::RequestGameplayTag(FName("Status.General.Fleeing"));
 	PlayerCharacter->GetAbilitySystemComponent()->RemoveLooseGameplayTag(FleeingTag);
 	UpdateRotationMode();

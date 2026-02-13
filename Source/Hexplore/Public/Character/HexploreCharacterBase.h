@@ -109,6 +109,9 @@ protected:
 
 	UFUNCTION()
 	void OnEngagementRangeEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SetWeaponSheathed(bool bSheathed);
 	
 	/*
 	* End Combat 
@@ -118,6 +121,12 @@ protected:
 	/*
 	 * Combat 
 	 */
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UAnimInstance> SheatheWeaponMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UAnimInstance> UnsheatheWeaponMontage;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
@@ -148,6 +157,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Combat")
 	float EngagementMovementSpeed = 150.f;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Combat")
+	bool bWeaponIsSheathed = true;
 
 	/*
 	* End Combat 

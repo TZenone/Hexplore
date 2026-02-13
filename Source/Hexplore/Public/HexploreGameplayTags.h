@@ -68,6 +68,7 @@ public:
 	FGameplayTag Status_General_Fleeing;
 	FGameplayTag Status_General_ImmuneToOpportunityAction;
 	FGameplayTag Status_General_HitReact;
+	FGameplayTag Status_Weapon_Unsheathed;
 	
 	
 protected:

@@ -4,6 +4,7 @@
 #include "Character/HexploreCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "HexploreGameplayTags.h"
 #include "AbilitySystem/HexploreAbilitySystemComponent.h"
 #include "AbilitySystem/HexploreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
@@ -42,6 +43,7 @@ void AHexploreCharacterBase::BeginPlay()
 
 	EngagementRange->OnComponentBeginOverlap.AddDynamic(this, &AHexploreCharacterBase::OnEngagementRangeBeginOverlap);
 	EngagementRange->OnComponentEndOverlap.AddDynamic(this, &AHexploreCharacterBase::OnEngagementRangeEndOverlap);
+	SetWeaponSheathed(bWeaponIsSheathed);
 }
 
 void AHexploreCharacterBase::InitAbilityActorInfo()
@@ -127,6 +129,21 @@ void AHexploreCharacterBase::OnEngagementRangeEndOverlap(UPrimitiveComponent* Ov
 			DisengageTarget(OtherActor);
 			AbilitySystemComponent->TryActivateAbilityByClass(OpportunityActionClass);
 		}
+	}
+}
+
+void AHexploreCharacterBase::SetWeaponSheathed(bool bSheathed)
+{
+	bWeaponIsSheathed = bSheathed;
+	if (!bWeaponIsSheathed)
+	{
+		AbilitySystemComponent->AddLooseGameplayTag(FHexploreGameplayTags().Status_Weapon_Unsheathed);
+		GetMesh()->LinkAnimClassLayers(UnsheatheWeaponMontage);
+	}
+	else
+	{
+		AbilitySystemComponent->RemoveLooseGameplayTag(FHexploreGameplayTags().Status_Weapon_Unsheathed);
+		GetMesh()->LinkAnimClassLayers(SheatheWeaponMontage);
 	}
 }
 

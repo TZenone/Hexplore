@@ -163,5 +163,8 @@ void FHexploreGameplayTags::InitializeNativeGameplayTags()
 		FName("Status.General.HitReact"),
 		FString("Status tag for hit reacting.")
 		);
-	
+	GameplayTags.Status_Weapon_Unsheathed = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Status.Weapon.Unsheathed"),
+		FString("Status tag for when weapon is unsheathed.")
+		);
 }
